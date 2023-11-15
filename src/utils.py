@@ -11,7 +11,7 @@ ENTITIES = ["FOOD", "QUANTITY", "UNIT", "PROCESS", "PHYSICAL_QUALITY", "COLOR",
             "TASTE", "PURPOSE", "PART"]
 
 
-def prepare_data(taste_set, entities_format="spans"):
+def prepare_data(taste_set, entities_format="spans", encoding="utf-8"):
     """
     :param tasteset: TASTEset as pd.DataFrame or a path to the TASTEset
     :param entities_format: the format of entities. If equal to 'bio', entities
@@ -26,7 +26,7 @@ def prepare_data(taste_set, entities_format="spans"):
     if isinstance(taste_set, pd.DataFrame):
         df = taste_set
     elif isinstance(taste_set, str) and os.path.exists(taste_set):
-        df = pd.read_csv(taste_set)
+        df = pd.read_csv(taste_set, encoding=encoding)
     else:
         raise ValueError('Incorret TASTEset format!')
 
