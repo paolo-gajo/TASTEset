@@ -19,11 +19,10 @@ def adjust_annotations(json_data):
         for match in re.finditer(fraction_pattern, text):
             fraction_index = match.start() + adjustment
             fraction = match.group()
-            print(fraction)
+            # print(fraction)
             three_char_fraction = fraction_mapping[fraction]
-            print(three_char_fraction)
+            # print(three_char_fraction)
             text = text[:fraction_index] + three_char_fraction + text[fraction_index + 1:]
-
             # Adjust the indices of subsequent annotations
             for entity in entities:
                 start, end = entity[0], entity[1]
@@ -36,17 +35,16 @@ def adjust_annotations(json_data):
 
             adjustment += 2
 
-        annotation['text'] = text
-
+        annotation['text'] = text.replace("⁄", "/")
     return json_data
 
 # Example usage
-json_file = '/home/pgajo/working/food/data/TASTEset/data/TASTEset.json'
+json_file = '/home/pgajo/working/food/data/TASTEset/data/TASTEset_semicolon.json'
 with open(json_file, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 modified_data = adjust_annotations(data)
 
 # save to updated json file with different name
-with open(json_file[:-5] + '_updated.json', 'w', encoding='utf-8') as file:
+with open(json_file[:-5] + '_formatted.json', 'w', encoding='utf-8') as file:
     json.dump(modified_data, file, ensure_ascii=False, indent=4)
