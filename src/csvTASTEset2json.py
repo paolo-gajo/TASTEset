@@ -6,7 +6,7 @@ from utils import prepare_data, ENTITIES
 
 def TASTEset2JSON(csv_path):
     recipes, entities = prepare_data(csv_path)
-    annotations = [{'text': recipe, 'entities': ents} for recipe, ents in zip(recipes, entities)]
+    annotations = [{'text_en': recipe, 'entities_en': ents} for recipe, ents in zip(recipes, entities)]
     training_data = {'classes': ENTITIES, 'annotations': annotations}
     return training_data
 
