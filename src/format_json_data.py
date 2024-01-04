@@ -12,8 +12,8 @@ def adjust_annotations(json_data):
     fraction_pattern = re.compile('|'.join(re.escape(key) for key in fraction_mapping.keys()))
 
     for annotation in json_data['annotations']:
-        text = annotation['text']
-        entities = annotation['entities']
+        text = annotation['text_en']
+        entities = annotation['entities_en']
         adjustment = 0
 
         for match in re.finditer(fraction_pattern, text):
@@ -26,16 +26,19 @@ def adjust_annotations(json_data):
             # Adjust the indices of subsequent annotations
             for entity in entities:
                 start, end = entity[0], entity[1]
-                if start == fraction_index:
+                if start <= fraction_index and end > fraction_index:
                     entity[0] = start
                     entity[1] = end + 2
+                    # print(f"original: {text[start:end]} BECOMES {text[start:end + 2]}")
                 if start > fraction_index:
                     entity[0] = start + 2
                     entity[1] = end + 2
 
             adjustment += 2
-
-        annotation['text'] = text.replace("⁄", "/")
+        # for entity in entities:
+        #     print(text[entity[0]:entity[1]], end=' ')
+        # print('\n----------')
+        annotation['text_en'] = text.replace("⁄", "/")
     return json_data
 
 # Example usage
@@ -44,6 +47,11 @@ with open(json_file, 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 modified_data = adjust_annotations(data)
+
+# for line in modified_data['annotations']:
+#     for entity in line['entities_en']:
+#         print(line['text_en'][entity[0]:entity[1]], end=' ')
+#     print('\n----------')
 
 # save to updated json file with different name
 with open(json_file[:-5] + '_formatted.json', 'w', encoding='utf-8') as file:

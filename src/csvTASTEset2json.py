@@ -2,7 +2,7 @@ import json
 import spacy
 import sys
 sys.path.append('/home/pgajo/working/food/TASTEset/src')
-from utils import prepare_data, ENTITIES
+from tasteset_utils import prepare_data, ENTITIES
 
 def TASTEset2JSON(csv_path):
     recipes, entities = prepare_data(csv_path)
